@@ -80,6 +80,7 @@ import { UserSagas } from './sagas';
     CqrsModule,
     NestjsEventStoreModule.forFeature({
       featureStreamName: '$ce-user',
+      subscriptionsDelay: 2000, // Default is 0 (Optional)
       subscriptions: [
         {
           type: EventStoreSubscriptionType.CatchUp,
