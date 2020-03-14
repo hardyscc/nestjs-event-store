@@ -9,29 +9,31 @@ NestJs Event Store
 </p>
 
 <p align="center">
-<a href="https://www.npmjs.com/package/@juicycleff/nestjs-event-store" target="_blank"><img src="https://img.shields.io/npm/v/@juicycleff/nestjs-event-store?style=flat-square" alt="NPM Version"/></a>
-<a href="https://img.shields.io/npm/l/@juicycleff/nestjs-event-store?style=flat-square" target="_blank"><img src="https://img.shields.io/npm/l/@juicycleff/nestjs-event-store?style=flat-square" alt="License"/></a>
-<a href="https://img.shields.io/github/languages/code-size/juicycleff/nestjs-event-store?style=flat-square" target="_blank"><img src="https://img.shields.io/github/languages/code-size/juicycleff/nestjs-event-store?style=flat-square" alt="Code Size"/></a>
-<a href="https://img.shields.io/github/languages/top/juicycleff/nestjs-event-store?style=flat-square" target="_blank"><img src="https://img.shields.io/github/languages/top/juicycleff/nestjs-event-store?style=flat-square" alt="Top Language"/></a>
+<a href="https://www.npmjs.com/package/@hardyscc/nestjs-event-store" target="_blank"><img src="https://img.shields.io/npm/v/@hardyscc/nestjs-event-store?style=flat-square" alt="NPM Version"/></a>
+<a href="https://img.shields.io/npm/l/@hardyscc/nestjs-event-store?style=flat-square" target="_blank"><img src="https://img.shields.io/npm/l/@hardyscc/nestjs-event-store?style=flat-square" alt="License"/></a>
+<a href="https://img.shields.io/github/languages/code-size/hardyscc/nestjs-event-store?style=flat-square" target="_blank"><img src="https://img.shields.io/github/languages/code-size/hardyscc/nestjs-event-store?style=flat-square" alt="Code Size"/></a>
+<a href="https://img.shields.io/github/languages/top/hardyscc/nestjs-event-store?style=flat-square" target="_blank"><img src="https://img.shields.io/github/languages/top/hardyscc/nestjs-event-store?style=flat-square" alt="Top Language"/></a>
 <a href="https://img.shields.io/codacy/grade/0944a2f07aca403da4d4637606af7478?style=flat-square" target="_blank"><img src="https://img.shields.io/codacy/grade/dc460840375d4ac995f5647a5ed10179?style=flat-square" alt="Top Language"/></a>
 </p>
 
 ## Installation
 
 ```bash
-$ yarn install @juicycleff/nestjs-event-store
+$ yarn install @hardyscc/nestjs-event-store
 ```
 
 ## Description
+
 This module aims to bridge the gap between NestJs and [Event Store](https://eventstore.org). It supports all different subscription strategies of supported by Event Store.
-Such as Volatile, CatchUp and Persistent subscriptions fairly easily. 
+Such as Volatile, CatchUp and Persistent subscriptions fairly easily.
 
 ### Setup from versions from `v2.0.0`
+
 ##### Setup root app module
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { NestjsEventStoreModule } from '@juicycleff/nestjs-event-store';
+import { NestjsEventStoreModule } from '@hardyscc/nestjs-event-store';
 
 @Module({
   imports: [
@@ -53,18 +55,23 @@ export class AppModule {}
 ```
 
 ## Setup module
-*Note* `featureStreamName` field is not important if you're subscription type is persistent'
+
+_Note_ `featureStreamName` field is not important if you're subscription type is persistent'
 
 ```typescript
 import { Module } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus } from '@nestjs/cqrs';
-import { NestjsEventStoreModule, EventStore, EventStoreSubscriptionType } from '@juicycleff/nestjs-event-store';
+import {
+  NestjsEventStoreModule,
+  EventStore,
+  EventStoreSubscriptionType
+} from '@hardyscc/nestjs-event-store';
 
 import {
   UserCommandHandlers,
   UserCreatedEvent,
   UserEventHandlers,
-  UserQueryHandlers,
+  UserQueryHandlers
 } from '../cqrs';
 import { UserSagas } from './sagas';
 
@@ -78,61 +85,62 @@ import { UserSagas } from './sagas';
           type: EventStoreSubscriptionType.CatchUp,
           stream: '$ce-user',
           resolveLinkTos: true, // Default is true (Optional)
-          lastCheckpoint: 13, // Default is 0 (Optional)
+          lastCheckpoint: 13 // Default is 0 (Optional)
         },
         {
           type: EventStoreSubscriptionType.Volatile,
-          stream: '$ce-user',
+          stream: '$ce-user'
         },
         {
           type: EventStoreSubscriptionType.Persistent,
           stream: '$ce-user',
           persistentSubscriptionName: 'steamName',
-          resolveLinkTos: true,  // Default is true (Optional)
-        },
+          resolveLinkTos: true // Default is true (Optional)
+        }
       ],
       eventHandlers: {
-        UserLoggedInEvent: (data) => new UserLoggedInEvent(data),
-        UserRegisteredEvent: (data) => new UserRegisteredEvent(data),
-        EmailVerifiedEvent: (data) => new EmailVerifiedEvent(data),
-      },
-    }),
+        UserLoggedInEvent: data => new UserLoggedInEvent(data),
+        UserRegisteredEvent: data => new UserRegisteredEvent(data),
+        EmailVerifiedEvent: data => new EmailVerifiedEvent(data)
+      }
+    })
   ],
-  
+
   providers: [
     UserSagas,
     ...UserQueryHandlers,
     ...UserCommandHandlers,
-    ...UserEventHandlers,
-  ],
+    ...UserEventHandlers
+  ]
 })
 export class UserModule {}
 ```
 
 ### Setup from versions below `v2.0.0`
+
 #### Setup root app module
 
 ```typescript
 import { Module } from '@nestjs/common';
-import { NestjsEventStoreModule } from '@juicycleff/nestjs-event-store';
+import { NestjsEventStoreModule } from '@hardyscc/nestjs-event-store';
 
 @Module({
   imports: [
     NestjsEventStoreModule.forRoot({
       http: {
         port: parseInt(process.env.ES_HTTP_PORT, 10),
-        protocol: process.env.ES_HTTP_PROTOCOL,
+        protocol: process.env.ES_HTTP_PROTOCOL
       },
       tcp: {
         credentials: {
           password: process.env.ES_TCP_PASSWORD,
-          username: process.env.ES_TCP_USERNAME,
+          username: process.env.ES_TCP_USERNAME
         },
         hostname: process.env.ES_TCP_HOSTNAME,
         port: parseInt(process.env.ES_TCP_PORT, 10),
-        protocol: process.env.ES_TCP_PROTOCOL,
-      },
-    }),
+        protocol: process.env.ES_TCP_PROTOCOL
+      }
+    })
   ]
 })
 export class AppModule {}
@@ -143,13 +151,16 @@ export class AppModule {}
 ```typescript
 import { Module } from '@nestjs/common';
 import { CommandBus, CqrsModule, EventBus } from '@nestjs/cqrs';
-import { NestjsEventStoreModule, EventStore } from '@juicycleff/nestjs-event-store';
+import {
+  NestjsEventStoreModule,
+  EventStore
+} from '@hardyscc/nestjs-event-store';
 
 import {
   UserCommandHandlers,
   UserCreatedEvent,
   UserEventHandlers,
-  UserQueryHandlers,
+  UserQueryHandlers
 } from '../cqrs';
 import { UserSagas } from './sagas';
 
@@ -158,22 +169,22 @@ import { UserSagas } from './sagas';
     CqrsModule,
     NestjsEventStoreModule.forFeature({
       name: 'user',
-      resolveLinkTos: false,
-    }),
+      resolveLinkTos: false
+    })
   ],
-  
+
   providers: [
     UserSagas,
     ...UserQueryHandlers,
     ...UserCommandHandlers,
-    ...UserEventHandlers,
-  ],
+    ...UserEventHandlers
+  ]
 })
 export class UserModule {
   constructor(
     private readonly command$: CommandBus,
     private readonly event$: EventBus,
-    private readonly eventStore: EventStore,
+    private readonly eventStore: EventStore
   ) {}
 
   onModuleInit(): any {
@@ -183,15 +194,15 @@ export class UserModule {
   }
 
   eventHandlers = {
-    UserCreatedEvent: (data) => new UserCreatedEvent(data),
+    UserCreatedEvent: data => new UserCreatedEvent(data)
   };
 }
 ```
 
-
 ## Notice
- `2.0.0` release inspired by [nestjs-eventstore](https://github.com/daypaio/nestjs-eventstore)
+
+`2.0.0` release inspired by [nestjs-eventstore](https://github.com/daypaio/nestjs-eventstore)
 
 ## License
 
-  This project is [MIT licensed](LICENSE).
+This project is [MIT licensed](LICENSE).
