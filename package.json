@@ -1,6 +1,6 @@
 {
   "name": "@hardyscc/nestjs-event-store",
-  "version": "2.0.3",
+  "version": "2.0.7",
   "description": "NestJS CQRS module for EventStore.org CQRS",
   "author": {
     "name": "Rex Isaac Raphael",
@@ -35,7 +35,7 @@
     "reset": "git clean -dfx && git reset --hard && npm i",
     "clean": "trash build test",
     "prepare-release": "run-s reset test cov:check doc:html version doc:publish",
-    "preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('nestjs-event-store must be installed with Yarn: https://yarnpkg.com/')\""
+    "//preinstall": "node -e \"if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('nestjs-event-store must be installed with Yarn: https://yarnpkg.com/')\""
   },
   "scripts-info": {
     "info": "Display information about the package scripts",
@@ -58,14 +58,19 @@
     "node-eventstore-client": "^0.2.15"
   },
   "peerDependencies": {
-    "@nestjs/common": "^6.0.0",
-    "@nestjs/core": "^6.0.0",
-    "@nestjs/cqrs": "^6.0.1"
+    "@nestjs/common": "^6.0.0 || ^7.0.0",
+    "@nestjs/core": "^6.0.0 || ^7.0.0",
+    "@nestjs/cqrs": "^6.0.1 || ^7.0.0",
+    "reflect-metadata": "^0.1.12",
+    "rxjs": "^6.0.0"
   },
   "devDependencies": {
     "@bitjson/npm-scripts-info": "^1.0.0",
     "@bitjson/typedoc": "^0.15.0-0",
     "@nestjs/cli": "^6.9.0",
+    "@nestjs/common": "6.11.11",
+    "@nestjs/core": "6.11.11",
+    "@nestjs/cqrs": "6.1.0",
     "@nestjs/schematics": "^6.7.0",
     "@nestjs/testing": "^6.7.1",
     "@types/jest": "^24.0.18",
